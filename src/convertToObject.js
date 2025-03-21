@@ -6,20 +6,25 @@
  * @return {object}
  */
 function convertToObject(sourceString) {
-  const styles = sourceString
+  const stylesObject = sourceString
     .split(';')
     .map((line) => line.trim())
-    .reduce((result, line) => {
+    .filter((line) => line !== '')
+    .map((line) => {
       const [key, value] = line.split(':').map((part) => part.trim());
 
       if (key && value) {
-        result[key] = value;
+        return { [key]: value };
       }
 
-      return result;
+      return null;
+    })
+    .filter((item) => item !== null)
+    .reduce((acc, current) => {
+      return { ...acc, ...current };
     }, {});
 
-  return styles;
+  return stylesObject;
 }
 
 module.exports = convertToObject;
